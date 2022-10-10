@@ -1,0 +1,28 @@
+data:
+  original_data_path: ../data
+  train_data_dir: ./data
+  train_data_name: train_vector.h5
+  multiplier: 1
+
+  input_type: 1 # 0 - image, 1 - vector
+  vector_input_dim: 10
+  img_input_dim_row: 10
+  img_input_dim_col: 10
+  target_dim: 28
+
+train:
+  mode: 0  # 0-train, 1-test
+  train_data_path: './data/train_vector.h5'
+  epoch: 10
+  batch_size: 32
+  ckpt_path: './ckpt'
+  test_result_path: './result'
+
+  pre_train_discriminator: 0 # 0 - inactive, 1 - active
+  pre_train_epoch: 1
+  pre_train_ckpt: D_preTrain.pth
+
+  generator_num_block: 3
+  generator_init_unit: 128
+
+  discriminator_num_block: 2
