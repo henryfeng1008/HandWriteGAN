@@ -23,7 +23,6 @@
 import os
 import time
 import imageio
-import yaml
 import torch
 import numpy as np
 import torch.nn as nn
@@ -44,6 +43,7 @@ def modelTest(epoch, model, config):
             # noise_input = torch.tensor(np.clip(np.random.normal(i * 0.1, 1, (1, 1, 28, 28)).astype(np.float32), 0, 1)).cuda()
             noise_input = -1 * np.ones((1, 1, 10))
             noise_input[0, 0, i] = np.random.uniform(0, 1)
+            # noise_input = np.clip(noise_input, -1, 1)
             noise_input = torch.tensor(noise_input.astype(np.float32)).cuda()
             # noise_input = torch.tensor(np.clip(np.random.normal(i * 0.2 - 1, 1, (1, 1, 100)).astype(np.float32), -1, 1)).cuda()
             # noise_input = torch.tensor(np.clip(np.random.normal(0, 1, (1, 1, 100)).astype(np.float32), -1, 1)).cuda()
@@ -162,7 +162,7 @@ def modelTrain(train_data_loader, config):
                 np.ones(g_fake_logits.shape).astype(np.float32)).cuda()
             false_label = torch.tensor(
                 np.zeros(g_fake_logits.shape).astype(np.float32)).cuda()
-            g_gan_loss = cross_entropy_loss_func(g_fake_logits, true_label)
+            g_gan_loss = l1_loss_func(g_fake_logits, true_label)
             g_loss = (g_gan_loss + l1_loss) * 0.5
             # g_loss = g_gan_loss
             g_loss.backward()
@@ -170,9 +170,11 @@ def modelTrain(train_data_loader, config):
 
             # train Discriminator
             optimizer_d.zero_grad()
-            fake_loss = cross_entropy_loss_func(
+            # fake_loss = cross_entropy_loss_func(
+            fake_loss = l1_loss_func(
                 discriminator(fake_img.detach()), false_label)
-            real_loss = cross_entropy_loss_func(
+            # real_loss = cross_entropy_loss_func(
+            real_loss = l1_loss_func(
                 discriminator(target_data), true_label)
             d_loss = (fake_loss + real_loss) / 2
             d_loss.backward()

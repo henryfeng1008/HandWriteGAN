@@ -34,7 +34,7 @@ class ResBlock(nn.Module):
                                padding='same')
         self.conv2 = nn.Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1),
                                padding='same')
-        self.leakyRelu = nn.LeakyReLU(0.02)
+        self.leakyRelu = nn.LeakyReLU(0.2)
 
     def forward(self, x):
         out = x
@@ -117,7 +117,7 @@ class HandWriteDiscriminator(nn.Module):
 
 def main():
     print("[*] Check generator")
-    model = HandWriteGenerator(5, 64)
+    model = HandWriteGenerator(3, 125)
     x = torch.randn((16, 1, 10))
     start = time.time()
     output = model(x)
@@ -126,7 +126,7 @@ def main():
     print("[*]", output.shape, "\n")
 
     print("[*] Check discriminator")
-    model = HandWriteDiscriminator(5)
+    model = HandWriteDiscriminator(2)
     x = torch.randn((16, 1, 28, 28))
     start = time.time()
     output = model(x)

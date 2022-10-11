@@ -14,7 +14,7 @@ train:
   mode: 0  # 0-train, 1-test
   train_data_path: './data/train_vector.h5'
   epoch: 10
-  batch_size: 32
+  batch_size: 128
   ckpt_path: './ckpt'
   test_result_path: './result'
 
@@ -22,7 +22,7 @@ train:
   pre_train_epoch: 1
   pre_train_ckpt: D_preTrain.pth
 
-  generator_num_block: 3
+  generator_num_block: 2
   generator_init_unit: 128
 
-  discriminator_num_block: 2
+  discriminator_num_block: 0

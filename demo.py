@@ -43,12 +43,11 @@ def main():
     config_all = utils.load_config(config_path)
     net_config = config_all['train']
 
-    # original_digits = input("Please input the digits:")
-    original_digits = "17601638921"
+    original_digits = input("Please input the digits:")
     digit_sequence = str_to_list(original_digits)
 
     img_sequence = []
-    model_ckpt_path = os.path.join('./release', 'G_00001.pth')
+    model_ckpt_path = os.path.join('./release', 'G_00009.pth')
     if len(digit_sequence):
         generator_num_block = net_config['generator_num_block']
         generator_init_unit = net_config['generator_init_unit']
@@ -59,6 +58,7 @@ def main():
         for digit in digit_sequence:
             noise_input = -1 * np.ones((1, 1, 10))
             noise_input[0, 0, digit] = np.random.uniform(0, 1)
+            # noise_input = np.clip(noise_input, -1, 1)
             noise_input = noise_input.astype(np.float32)
             # print(digit, noise_input)
             fake_image = utils.run_model(generator, noise_input)

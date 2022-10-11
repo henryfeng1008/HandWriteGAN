@@ -69,12 +69,12 @@ def generate_train_pair(data_loaders, config):
     train_data_name = config['train_data_name']
     utils.ensure_dir(train_data_dir)
     train_data_path = os.path.join(train_data_dir, train_data_name)
-    f = h5py.File(train_data_path, 'w')
 
     input_data = []
     target_data = []
 
     multiplier = config['multiplier']
+    print("[*] Multiplier", multiplier)
     input_type = config['input_type']
     vector_input_dim = config["vector_input_dim"]
     img_input_dim_row = config["img_input_dim_row"]
@@ -114,6 +114,7 @@ def generate_train_pair(data_loaders, config):
             sys.stdout.flush()
         print()
 
+    f = h5py.File(train_data_path, 'w')
     f['input_data'] = input_data
     f['target_data'] = target_data
     f.close()
