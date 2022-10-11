@@ -40,13 +40,9 @@ def modelTest(epoch, model, config):
     result_path = config['test_result_path']
     with torch.no_grad():
         for i in range(10):
-            # noise_input = torch.tensor(np.clip(np.random.normal(i * 0.1, 1, (1, 1, 28, 28)).astype(np.float32), 0, 1)).cuda()
             noise_input = -1 * np.ones((1, 1, 10))
             noise_input[0, 0, i] = np.random.uniform(0, 1)
-            # noise_input = np.clip(noise_input, -1, 1)
             noise_input = torch.tensor(noise_input.astype(np.float32)).cuda()
-            # noise_input = torch.tensor(np.clip(np.random.normal(i * 0.2 - 1, 1, (1, 1, 100)).astype(np.float32), -1, 1)).cuda()
-            # noise_input = torch.tensor(np.clip(np.random.normal(0, 1, (1, 1, 100)).astype(np.float32), -1, 1)).cuda()
 
             output = model(noise_input.cuda())
             fake_img = output.cpu().numpy()
@@ -63,12 +59,11 @@ def modelTrain(train_data_loader, config):
     ckpt_path = config['ckpt_path']
     generator_num_block = config['generator_num_block']
     generator_init_unit = config['generator_init_unit']
-    # print(generator_num_block, generator_init_unit)
     generator = HandWriteGenerator(num_blocks=generator_num_block,
                                    num_units=generator_init_unit).cuda()
 
     discriminator_num_block = config['discriminator_num_block']
-    # print(discriminator_num_block)
+
     discriminator = HandWriteDiscriminator(
         num_blocks=discriminator_num_block).cuda()
 
@@ -164,16 +159,14 @@ def modelTrain(train_data_loader, config):
                 np.zeros(g_fake_logits.shape).astype(np.float32)).cuda()
             g_gan_loss = l1_loss_func(g_fake_logits, true_label)
             g_loss = (g_gan_loss + l1_loss) * 0.5
-            # g_loss = g_gan_loss
             g_loss.backward()
             optimizer_g.step()
 
             # train Discriminator
             optimizer_d.zero_grad()
-            # fake_loss = cross_entropy_loss_func(
+
             fake_loss = l1_loss_func(
                 discriminator(fake_img.detach()), false_label)
-            # real_loss = cross_entropy_loss_func(
             real_loss = l1_loss_func(
                 discriminator(target_data), true_label)
             d_loss = (fake_loss + real_loss) / 2

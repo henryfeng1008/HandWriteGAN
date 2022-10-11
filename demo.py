@@ -51,16 +51,14 @@ def main():
     if len(digit_sequence):
         generator_num_block = net_config['generator_num_block']
         generator_init_unit = net_config['generator_init_unit']
-        # print(generator_num_block, generator_init_unit)
         model = HandWriteGenerator(num_blocks=generator_num_block,
                                    num_units=generator_init_unit)
         generator = utils.load_model(model, model_ckpt_path)
+
         for digit in digit_sequence:
             noise_input = -1 * np.ones((1, 1, 10))
             noise_input[0, 0, digit] = np.random.uniform(0, 1)
-            # noise_input = np.clip(noise_input, -1, 1)
             noise_input = noise_input.astype(np.float32)
-            # print(digit, noise_input)
             fake_image = utils.run_model(generator, noise_input)
             img_sequence.append(fake_image)
         pass
